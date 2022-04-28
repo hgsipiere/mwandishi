@@ -1,0 +1,8 @@
+#! /bin/bash
+
+# TODO put actually useful ones here or maybe write tests in Haskell
+curl http://localhost:8081/doc/5
+echo ""
+
+curl -XPOST http://localhost:8081/send_doc/5 -d "\"hi\"" -H 'Content-Type: application/json'
+echo ""

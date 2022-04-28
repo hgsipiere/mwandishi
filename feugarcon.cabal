@@ -1,0 +1,53 @@
+cabal-version:      3.0
+name:               feugarcon
+version:            0.1.0.0
+
+-- A short (one-line) description of the package.
+-- synopsis:
+
+-- A longer description of the package.
+-- description:
+
+-- A URL where users can report bugs.
+-- bug-reports:
+
+-- The license under which the package is released.
+-- license:
+
+-- The package author(s).
+-- author:
+
+-- An email address to which users can send suggestions, bug reports, and patches.
+-- maintainer:
+
+-- A copyright notice.
+-- copyright:
+-- category:
+extra-source-files: CHANGELOG.md
+
+library
+    exposed-modules:  MyLib
+
+    -- Modules included in this library but not exported.
+    -- other-modules:
+
+    -- LANGUAGE extensions used by modules in this package.
+    -- other-extensions:
+    build-depends:    base, text, servant, servant-server, warp, wai, persistent, persistent-sqlite, containers, lens, generic-lens >= 2.2.1.0, aeson, stm, stm-containers, focus, mtl
+    default-language: Haskell2010
+    default-extensions: BlockArguments, ConstraintKinds, DataKinds, DeriveGeneric, DerivingStrategies, DefaultSignatures, DuplicateRecordFields, FlexibleContexts, FlexibleInstances, GADTs, GeneralizedNewtypeDeriving, LambdaCase, MultiParamTypeClasses, NoMonomorphismRestriction, NamedFieldPuns, OverloadedStrings, OverloadedLabels, PartialTypeSignatures, PolyKinds, QuasiQuotes, RankNTypes, ScopedTypeVariables, StandaloneDeriving, TypeApplications, TemplateHaskell, TypeFamilies, TypeOperators, UndecidableInstances
+    hs-source-dirs:   src
+
+
+executable feugarcon
+    main-is:          Main.hs
+
+    -- Modules included in this executable, other than Main.
+    -- other-modules:
+    -- other-extensions:
+    build-depends:
+        base,
+        feugarcon
+
+    hs-source-dirs:   app
+    default-language: Haskell2010
