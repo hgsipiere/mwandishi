@@ -35,12 +35,15 @@ import Control.Applicative
 
 fmap2 = fmap . fmap
 
-liftSTM = lift . lift
+--liftSTM = lift . lift
 
 share [mkPersist sqlSettings, mkMigrate "migrateTables"] [persistLowerCase|
   Writings
     content Text
 |]
+
+class Monad m => MonadSTM m where
+  liftSTM :: STM a -> m a
 
 -- TMapMap isn't actually a pure Map or anything but rather a TVar mapified
 -- this is a temporary DB replacement, the authors should change the name
@@ -55,6 +58,9 @@ data Document = Document {position :: Int, content :: Text} deriving (Generic, S
 -- config is actually the wrong name, these are references passed around
 type Config = (TMap.Map Int Document, TQueue (Int, Operation))
 type Stack = ExceptT ServerError (ReaderT Config STM)
+
+instance MonadSTM Stack where
+  liftSTM = lift . lift
 
 -- this is awkward and not ideal, isn't this just a natural transformation?
 stackToHandler :: Config -> Stack a -> Handler a -- ExceptT ServerError IO a
@@ -81,7 +87,7 @@ delCharacters n (Document cursor txt) = Document (cursor - n) (T.drop n preCurso
 
 server' :: ServerT WritingAPI Stack
 server' = getdoc :<|> postdoc :<|> submitOp
-  where getdoc :: Int -> Stack (Maybe Text)
+  where getdoc :: (MonadSTM m, MonadReader Config m) => Int -> m (Maybe Text)
         getdoc ident = do
           (docMap, _) <- ask
           liftSTM $ fmap2 content $ TMap.lookup ident docMap
